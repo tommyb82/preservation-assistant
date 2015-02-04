@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<repinfo xmlns="http://preservedigital.info/ril" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://preservedigital.info/ril http://registry2.scidip-es.eu/repository/SCIDIP/ril_1.1.xsd">
+
+	<cpid>0000-0000-0123-5678</cpid>
+	<version>1</version>
+	<lastmodified>2014-02-24T12:10:56</lastmodified>
+	<displayname>Empty RIL</displayname>
+	<description>Empty RIL</description>
+	<structuralRIList />
+	<semanticRIList />
+	<otherRIList />
+</repinfo>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: docHeader">
+</head>
+<body>
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+
+	<div id="main">
+		<h2 class="error" th:text="#{error.maxuploadsizeexceeded.title}">Error: file too big</h2>
+		<h3 th:text="#{error.maxuploadsizeexceeded.subtitle(${T(org.apache.commons.io.FileUtils).byteCountToDisplaySize(@maxUploadSize)})}">The maximum size for uploaded files is 10MB</h3>
+		<p><a class="button" href="javascript:window.history.back();">Back to form</a></p>
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+</body>
+</html>

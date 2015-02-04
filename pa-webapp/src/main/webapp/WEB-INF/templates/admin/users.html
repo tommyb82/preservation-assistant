@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: docHeader">
+</head>
+<body id="admin">
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+
+	<div id="main">
+		<h2 th:text="#{users.management.title}">User management</h2>
+		<h3 th:text="#{users.management.subtitle}">Use this page to add, edit and delete users</h3>
+		<h3 class="message" th:if="${! #strings.isEmpty(msgKey)}" th:text="#{${msgKey}}"></h3>
+		
+		<p>
+			<strong th:text="#{users.changepassword.policymsg}">New password must be 6-10 characters in length and contain a number, etc.</strong>
+		</p>
+		
+		<form th:action="@{'/admin/users/add'}" th:object="${newUser}" method="post" class="floatLeft halfWidth">
+			<table>
+				<thead>
+					<tr>
+						<th colspan="2">Add a new user</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><label for="username" th:text="#{users.management.new.form.username}">Username</label></td>
+						<td><input type="text" th:field="*{username}" th:errorclass="fieldError" autocomplete="off" /></td>
+						<td th:if="${#fields.hasErrors('username')}"><span class="error" th:errors="*{username}">Username invalid</span></td>
+					</tr>
+					<tr>
+						<td><label for="newPassword" th:text="#{users.management.new.form.password}">New password</label></td>
+						<td><input type="password" th:field="*{newPassword}" th:errorclass="fieldError" /></td>
+						<td th:if="${#fields.hasErrors('newPassword')}"><span class="error" th:errors="*{newPassword}">New password invalid</span></td>
+					</tr>
+					<tr>
+						<td><label for="newPasswordRepeat" th:text="#{users.management.new.form.repeatpassword}">Repeat new password</label></td>
+						<td><input type="password" th:field="*{newPasswordRepeat}" th:errorclass="fieldError" /></td>
+						<td th:if="${#fields.hasErrors('newPasswordRepeat')}"><span class="error" th:errors="*{newPasswordRepeat}">Please repeat password</span></td>
+					</tr>
+					<tr>
+						<td><label for="enabled" th:text="#{users.management.edit.form.active}">Active?</label></td>
+						<td><input type="checkbox" th:field="*{enabled}" checked="checked" /></td>
+					</tr>
+					<tr>
+						<td><label for="roles" th:text="#{users.management.new.form.roles}">Assign roles</label></td>
+						<td>
+							<select th:field="*{roles}" multiple="multiple" th:size="${#lists.size(allRoles)}" th:errorclass="fieldError">
+								<option th:each="role : ${allRoles}" th:value="${{role}}" 
+							          th:text="${role.role}">Admin</option>
+							</select>
+						</td>
+						<td th:if="${#fields.hasErrors('roles')}"><span class="error" th:errors="*{roles}">Please select at least one role</span></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2"><button type="submit" th:text="#{buttons.labels.create}">Create</button></td>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+		
+		<table class="floatLeft halfWidth">
+			<thead>
+				<tr>
+					<th colspan="4">Current users</th>
+				</tr>
+				<tr class="subheadrow">
+					<th th:text="#{login.username}">Username</th>
+					<th th:text="#{users.management.edit.form.active}">Active?</th>
+					<th th:text="#{users.management.edit.form.roles}">Roles</th>
+					<th th:text="#{actions}">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="user : ${allUsers}">
+					<td th:text="${user.username}">admin</td>
+					<td>
+						<form th:action="@{'/admin/users/editactive'}" class="inline" method="post">
+							<input type="hidden" name="editactiveusername" th:value="${user.username}" />
+							<input type="checkbox" name="editactive" th:checked="${user.enabled}" />
+							<span class="message small"></span>
+						</form>
+					</td>
+					<td>
+						<span th:each="role,iterStat : ${user.roles}" th:text="${role.role + (iterStat.last ? '' : ', ')}">ADMIN</span>
+					</td>
+					<td>
+						<form th:action="@{'/admin/users/delete'}" class="inline" method="post">
+							<input type="hidden" name="delusername" th:value="${user.username}" />
+							<button type="submit" th:text="#{buttons.labels.delete}">Delete</button>
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+	<script type="text/javascript">
+		$(readyUserManagement);
+	</script>
+</body>
+</html>

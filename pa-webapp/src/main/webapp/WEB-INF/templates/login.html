@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: docHeader">
+</head>
+<body>
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+
+	<div id="main">
+		<h2 th:text="#{login.title}">Login</h2>
+		<h3 th:text="#{login.subtitle}">Login to the Preservation Assistant</h3>
+		<h3 class="error" th:if="${param.login_error}" th:text="#{login.errors.failed}">Login failed</h3>
+		<form action="#" th:action="@{'/j_spring_security_check'}" method="post" enctype="application/x-www-form-urlencoded">
+			<table class="autoWidth">
+				<tbody>
+					<tr>
+						<td><label for="username" th:text="#{login.username}">Username:</label></td>
+						<td><input type="text" id="username" name="j_username" autocomplete="off" autofocus="autofocus" /></td>
+					</tr>
+					<tr>
+						<td><label for="password" th:text="#{login.password}">Password:</label></td>
+						<td><input type="password" name="j_password" autocomplete="off" /></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2"><button type="submit" class="button" th:text="#{login.title}">Login</button></td>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+</body>
+</html>

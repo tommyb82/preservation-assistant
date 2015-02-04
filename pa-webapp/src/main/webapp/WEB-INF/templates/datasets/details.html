@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: docHeader">
+</head>
+<body id="datasets">
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+
+	<div id="main">
+		<h2 th:text="#{datasets.title}">Data sets</h2>
+		<h3 class="message" th:unless="${#strings.isEmpty(msgKey)}" th:text="#{${msgKey}}">Item saved</h3>
+		<h3 class="error" th:if="${! #strings.isEmpty(errorKey)}" th:text="#{${errorKey}}">An error occurred</h3>
+		<h3 th:text="#{titles.selectedproject} + ': ' + ${dataSet.displayName}">Selected: MERIS</h3>
+		
+		<h4 th:text="#{datasets.details.itemlist} + ':'">The selected data set contains the following items:</h4>
+		
+		<table>
+			<thead>
+				<tr>
+					<th th:text="#{phase}">Phase</th>
+					<th th:text="#{name}">Name</th>
+					<th th:text="#{label}">Label</th>
+					<th th:text="#{datasets.details.itemlist.headings.infostatus}">Items provided</th>
+					<th th:text="#{actions}">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="fc : ${formCounts}">
+					<td th:text="${fc.group}">Campaign Preparation</td>
+					<td th:text="${fc.name}">CP-1</td>
+					<td th:text="${fc.displayName}">Campaign Proposal</td>
+					<td th:text="${fc.formCount}">0</td>
+					<td>
+						<a class="button" href="/datasets/meris;fn=CP-1/items/CP-1/addnew" th:text="#{buttons.labels.addanother}"
+							th:unless="${fc.formCount == 0}" th:href="@{${datasetPath} + ';fn=' + ${fc.name} + '/items/new'}">Add another</a>
+							
+						<a class="button" href="/datasets/meris;fn=CP-1/items/edit" 
+							th:text="${fc.formCount == 0 ? '__#{buttons.labels.additem}__' : fc.formCount == 1 ? '__#{buttons.labels.edititem}__' : '__#{buttons.labels.edititems}__'}"
+							th:href="@{${datasetPath} + ';fn=' + ${fc.name} + '/items/edit'}">Edit</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+</body>
+</html>

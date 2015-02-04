@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:fragment="docHeader">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title th:text="#{app.title}">Preservation Assistant</title>
+		<link rel="stylesheet" type="text/css" media="all" href="//fonts.googleapis.com/css?family=Audiowide" />
+		<link rel="stylesheet" type="text/css" media="all" href="//switchboard.digitalpreserve.info/commontheme/css/scidip.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="" th:href="@{/webjars/jquery-ui/1.10.4/themes/base/jquery-ui.css}" />
+		<link rel="stylesheet" type="text/css" media="all" href="" th:href="@{/webjars/datatables/1.10.2/css/jquery.dataTables.min.css}" />
+		<link rel="stylesheet" type="text/css" media="all" href="../../css/pa.css" th:href="@{/css/pa.css}" />
+	</head>
+	<body>
+		<header id="header">
+			<div class="banner-box scidip-banner center">
+				<img src="//switchboard.digitalpreserve.info/commontheme/img/scidip_small.png" alt="scidip" id="scidip_logo" />
+	
+				<h3 class="scidip-title">SCIenceData Infrastructure for Preservation - Earth Science (SCIDIP-ES)</h3>
+			</div>
+			<div class="banner-box toolkit-banner center">
+				<img src="//switchboard.digitalpreserve.info/commontheme/img/toolkits/pa.png" alt="scidip" />
+				<div class="scidip-title">
+					<h1 th:text="#{app.title}">Preservation Assistant</h1>
+					<h2 th:text="#{app.tagline}">Preserve your data now!</h2>
+				</div>
+			</div>
+		</header>
+		<nav id="nav">
+			<div class="floatRight">
+				<span th:if="${#authorization.expression('isAuthenticated()')}"><a href="logout" th:href="@{/user}" th:text="${#authentication.name}">admin</a>&nbsp;::&nbsp;
+				<a href="logout" th:href="@{/logout}" th:text="#{logout.title}">logout</a>&nbsp;::&nbsp;</span>
+				<a href="?lang=en" title="English"> <img alt="English" src="../../images/i18n/en.png" th:src="@{/images/i18n/en.png}" />
+				</a>&nbsp;<a href="?lang=it" title="Italiano"> <img alt="Italiano" src="../../images/i18n/it.png" th:src="@{/images/i18n/it.png}" /></a>
+			</div>
+			<ul id="navlist">
+				<li><a href="/" th:href="@{/}" id="homenav">HOME</a></li>
+				<li><a href="datasets" th:href="@{/datasets/}" th:text="${#strings.toUpperCase('__#{datasets.title.short}__')}" id="dsnav">DATA SETS</a></li>
+				<li><a href="about" th:href="@{/about/}" th:text="${#strings.toUpperCase('__#{titles.about}__')}" id="aboutnav">ABOUT</a></li>
+				<li><a href="help" th:href="@{/help/}" th:text="${#strings.toUpperCase('__#{titles.help}__')}" id="helpnav">HELP</a></li>
+				<li th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+					<a href="admin" th:href="@{/admin/}" th:text="${#strings.toUpperCase('__#{titles.admin}__')}" id="adminnav">ADMIN</a>
+				</li>
+			</ul>
+		</nav>
+		
+		<div id="main">
+			<h2>Body content goes here</h2>
+			<p>An example <a href="/blah">link</a>.</p>
+		</div>
+		
+		<footer id="footer">
+			<p class="footerSmall">Preservation Assistant (<strong th:text="${application.version}">1.0</strong>)</p>
+			<p class="scidip">&copy; SCIDIP-ES 2014</p>
+			<span class="hidden" id="basepath" th:text="@{/}">/pa-webapp</span>
+			<script src="" th:src="@{/webjars/jquery/2.1.1/jquery.min.js}"></script>
+			<script src="" th:src="@{/webjars/jquery-ui/1.10.4/ui/minified/jquery-ui.min.js}"></script>
+			<script src="" th:src="@{/webjars/datatables/1.10.2/js/jquery.dataTables.min.js}"></script>
+			<script src="../../js/pa.js" th:src="@{/js/pa.js}"></script>
+		</footer>
+	</body>
+</html>

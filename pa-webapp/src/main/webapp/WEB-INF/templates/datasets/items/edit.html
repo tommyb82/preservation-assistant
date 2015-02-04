@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/schema/security">
+<head th:include="layout :: docHeader">
+</head>
+<body id="datasets">
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+	
+	<div id="main">
+		<div>
+			<h2 th:text="${saveAction == T(eu.scidipes.toolkits.pawebapp.web.SaveAction).EDIT ? '__#{items.edit.title}__' : '__#{items.addnew.title}__'} + ' (' + ${form.parentBundle.displayName} + ') &nbsp;'">
+				Edit data set item
+			</h2>
+			<h3 class="message" th:unless="${#strings.isEmpty(msgKey)}" th:text="#{${msgKey}}">Item saved</h3>
+			<h3 class="clearBoth" th:text="${form.name} + ': ' + ${form.displayName}">CP-1: Campaign proposal</h3>
+			<h4 th:text="#{items.edit.formprompt}">Use the form below to provide preservation info for this item</h4>
+			<p>
+				<a href="/datasets/meris" th:href="@{${datasetPath}}">Back to data set home</a>
+				<span th:unless="${#strings.isEmpty(form.introText)}">&nbsp;::&nbsp;<a href="#itemInfo">View additional item information</a></span>
+			</p>
+		</div>
+		<div class="wrapper">
+			<div class="wrapperCol">
+				<form action="" th:object="${form}" method="post" enctype="multipart/form-data">
+					<table>
+						<thead>
+							<tr>
+								<th colspan="2" th:text="#{items.edit.mandatoryitems.title}">Mandatory item details</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="quartWidth" th:text="#{items.edit.mandatoryitems.providedtype.label}">Select how to supply the data for this item</td>
+								<td>
+									<!-- Switch between data file upload and location URL field -->
+									<input type="radio" th:field="*{dataHolderType}" value="BYTESTREAM" class="autoWidth" /><span th:text="|#{upload} (Max: ${T(org.apache.commons.io.FileUtils).byteCountToDisplaySize(@maxUploadSize)})|">Upload</span>&nbsp;
+									<input type="radio" th:field="*{dataHolderType}" value="URI" class="autoWidth" /><span th:text="#{uri}">URL</span>
+								</td>
+							</tr>
+							<tr>
+								<td th:text="#{items.edit.mandatoryitems.providedata.label}">Provide data</td>
+								<td>
+									<!--/* The actual fields, either a file upload dialog or URL field. No auto-binding on these fields to prevent stored, encoded file being rendered to the response */-->
+									<div th:class="${form.dataHolderType == T(eu.scidipes.toolkits.palibrary.interfaces.FormFieldType).URI} ? 'hidden'" id="dataHolderFileBlock">
+										
+										<input type="file" name="dataHolder" id="dataHolderFile" th:errorclass="fieldError"
+											th:disabled="${form.dataHolderType == T(eu.scidipes.toolkits.palibrary.interfaces.FormFieldType).URI}" /> 
+										
+										<div th:if="${!#maps.isEmpty(form.dataHolderMetadata)}" class="small">
+											<p><strong th:text="#{items.edit.mandatoryitems.providedata.currentfile.title}">Current file</strong></p>
+											<p>
+												<strong th:text="|#{name}: |">Name: </strong><em th:text="${form.dataHolderMetadata[T(eu.scidipes.toolkits.palibrary.interfaces.CoreFieldMetadata).FILE_NAME]}">MyFile.pdf</em>
+												<strong th:text="|#{size}: |">Size: </strong><em th:text="${T(org.apache.commons.io.FileUtils).byteCountToDisplaySize( T(Long).valueOf(form.dataHolderMetadata[T(eu.scidipes.toolkits.palibrary.interfaces.CoreFieldMetadata).FILE_SIZE]  ))}">20MB</em>
+												<strong th:text="|#{type}: |">Type: </strong><em th:text="${form.dataHolderMetadata[T(eu.scidipes.toolkits.palibrary.interfaces.CoreFieldMetadata).FILE_MIMETYPE]}">PDF</em>
+											</p>
+										</div>
+									</div>
+									<input type="url" name="dataHolder" th:value="${((!#strings.isEmpty(form.dataHolder)) and (#strings.length(form.dataHolder) lt 2000)) and (form.dataHolderType == T(eu.scidipes.toolkits.palibrary.interfaces.FormFieldType).URI) ? form.dataHolder : ''}" 
+										th:class="${form.dataHolderType == T(eu.scidipes.toolkits.palibrary.interfaces.FormFieldType).BYTESTREAM} ? 'hidden'"
+										th:errorclass="fieldError" th:disabled="${form.dataHolderType == T(eu.scidipes.toolkits.palibrary.interfaces.FormFieldType).BYTESTREAM}" id="dataHolderURL" />
+								</td>
+								<td th:if="${#fields.hasErrors('dataHolder')}" >
+									<span class="error" th:errors="*{dataHolder}">Please enter a URI</span>
+								</td>
+							</tr>
+							<tr>
+								<td th:text="#{name}">Name (will appear on registry)</td>
+								<td>
+									<input type="text" th:field="*{itemFileName}" th:errorclass="fieldError" />	
+								</td>
+								<td th:if="${#fields.hasErrors('itemFileName')}" >
+									<span class="error" th:errors="*{itemFileName}">Please enter a name for this item</span>
+								</td>
+							</tr>
+							<tr>
+								<td th:text="#{type}">Type</td>
+								<td>
+									<select th:field="*{RILCPID}" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+										<option th:each="rilType : ${@sortedRILs[form.type]}" th:value="${{rilType.value}}" 
+											th:text="${rilType.key}">PDF</option>
+									</select>
+									<strong th:unless="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:text="${@sortedRILs[form.type].getKey(form.RILCPID)}"></strong>
+								</td>
+							</tr>
+							<tr sec:authorize="hasRole('ROLE_ADMIN')">
+								<td th:text="#{categories}">Categories</td>
+								<td>
+									<select th:field="*{categories}" multiple="multiple" size="15">
+										<option th:each="category : ${@repInfoCategories}" th:value="${{category}}" th:text="${category.name}">Semantic/Language/ComputerProgramming</option>
+									</select>
+								</td>
+							</tr>
+							
+							<!--/* Dynamic fields */-->
+							<tr th:unless="${#lists.isEmpty(form.formFields)}">
+								<td colspan="2">
+									<strong th:text="#{items.edit.additionalitems.title}">Additional item information</strong><br />
+									<em th:text="#{items.edit.additionalitems.subtitle}">Important: note about uploading, zipping etc</em>
+								</td>
+							</tr>	
+							<tr th:each="field,status : *{formFields}">
+								<td th:text="${field.displayName}">Name:</td>
+								<td>
+									<input type="text" th:field="*{formFields[__${status.index}__].value}" class="dynamicField"
+										th:disabled="${form.dataHolderType == T(eu.scidipes.toolkits.palibrary.interfaces.FormFieldType).URI}" />
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="2">
+									<a href="/datasets/meris" th:href="@{${datasetPath} + ';fn=' + ${form.name} + '/items/new'}" 
+										th:unless="${saveAction == T(eu.scidipes.toolkits.pawebapp.web.SaveAction).ADD_NEW or #strings.isEmpty(form.dataHolder)}" th:text="#{buttons.labels.addanother}" class="button">Add another</a>
+									
+									<a href="/datasets/meris" th:href="@{${datasetPath} + '/items/' + ${form.formID} + '/delete'}" onclick="return confirm('Confirm item deletion (cannot be undone):')"
+										th:unless="${#strings.isEmpty(form.dataHolder)}" th:text="#{buttons.labels.delete}" class="button">Delete</a>
+															
+									<a href="/datasets/meris" th:href="@{${datasetPath + (#strings.isEmpty(formName) ? '' : ';fn=' + formName)} + '/items/' + ${previous} + '/edit/'}" 
+										th:unless="${saveAction == T(eu.scidipes.toolkits.pawebapp.web.SaveAction).ADD_NEW or #strings.isEmpty(previous)}" th:text="#{buttons.labels.previous}" class="button">Previous</a>
+									
+									<a href="/datasets/meris" th:href="@{${datasetPath + (#strings.isEmpty(formName) ? '' : ';fn=' + formName)} + '/items/' + ${next} + '/edit/'}" 
+										th:unless="${saveAction == T(eu.scidipes.toolkits.pawebapp.web.SaveAction).ADD_NEW or #strings.isEmpty(next)}" th:text="#{buttons.labels.next}" class="button">Next</a>
+									
+									<a href="/datasets/meris" th:href="@{${datasetPath}}" th:text="#{buttons.labels.cancel}" class="button">Cancel</a>
+									<button type="submit" th:text="#{buttons.labels.save}">Save</button>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</form>
+				<div th:unless="${#strings.isEmpty(form.introText)}">
+					<h4 id="itemInfo">Additional item information</h4>
+					<pre th:text="${form.introText}">More info about the item..</pre>
+				</div>
+			</div>
+			<div class="wrapperCol">
+				
+				<div class="infoBlock" th:if="${form.formID != null and !#strings.isEmpty(form.dataHolder)} ">
+					<div th:if="${form.preserved and form.manifestCPID != null}" 
+						th:with="preservedMF=${T(eu.scidipes.common.framework.FrameworkWrapper).getManifest(form.manifestCPID)}">
+						<h4>This item has been preserved using the PA - details:</h4>
+						<div class="subInfoBlock">
+							<p><strong>Persistent Identifier: </strong><span th:text="${form.manifestCPID}">0000-1234-5678-ABCD</span></p>
+							<p><strong>Version: </strong><span th:text="${preservedMF.version}">123456</span></p>
+							<p>
+								<strong>Digital object location: </strong>
+								<a th:href="${preservedMF.location}" target="_blank" th:text="${preservedMF.location}">http://registry.scidip-es.eu/thing</a>
+							</p>
+							<p>
+								<strong>Registry: </strong>
+								<span th:text="${preservedMF.cpid.lastKnownGoodLocation.locationUID}">APA</span>
+							</p>
+						</div>
+					</div>
+					
+					<h4>Item groups</h4>
+					<p>Use this section to connect this item with other items in the <strong th:text="${form.parentBundle.displayName}">MERIS L1</strong> dataset project.
+					The groups you create will be preserved on a SCIDIP Registry when the dataset is preserved, as a connected 
+					<strong>Representation Information (RepInfo) network</strong>.</p>
+					
+					<div class="wrapper" th:with="noRILs=${#sets.isEmpty(dsRILs)}">
+						<div class="wrapperCol">
+							<span class="hidden" id="datasetName" th:text="${form.parentBundle.datasetName}">MERIS</span>
+							
+							<form th:action="@{${datasetPath} + '/items/groups/additem'}" name="addToGroupForm" method="post">
+								<input type="hidden" name="formID" th:value="${form.formID}" />
+								<table>
+									<thead>
+										<tr>
+											<th colspan="2">Add this item to a group</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:unless="${noRILs}">
+											<td><label for="coreRIType">Group item as:</label></td>
+											<td>
+												<select name="coreRIType" id="coreRIType">
+													<option th:each="coreRIType : ${T(eu.scidipes.toolkits.palibrary.impl.UploadRepInfoLabel.CoreRIType).values}" 
+														th:value="${coreRIType.name}" th:text="${coreRIType}">Structural RepInfo</option>
+												</select>
+											</td>
+										</tr>
+										<tr th:unless="${noRILs}">
+											<td><label for="rilCPID">In group:</label></td>
+											<td>
+												<select name="rilCPID" id="rilCPID">
+													<option th:each="dsRIL : ${dsRILs}" th:value="${dsRIL.rilCPID}" 
+														th:text="${dsRIL.rilName}">MERIS L2 Data</option>
+												</select>
+											</td>
+										</tr>
+										<tr th:if="${noRILs}">
+											<td colspan="2">No groups created for this dataset.  Use the form on the right to create one.</td>
+										</tr>
+									</tbody>
+									<tfoot th:unless="${noRILs}">
+										<tr>
+											<td colspan="2">
+												<button type="submit" th:text="#{buttons.labels.save}">Save</button>
+											</td>
+										</tr>
+									</tfoot>
+								</table>
+							</form>
+							
+							<div th:unless="${#maps.isEmpty(rilMembership)}" class="subInfoBlock">
+								<h4>This item has been included in the following groups:</h4>
+								<ul class="plainList">
+									<li th:each="rilMember: ${rilMembership}">
+										<strong th:text="|${rilMember.key.rilName}:|">RIL 1</strong>
+										<ul>
+											<li th:each="coreRI : ${rilMember.value}">
+												<span th:text="${coreRI}">Core RI - Structural </span>
+												- <a href="#" th:href="@{${datasetPath} + '/items/groups/removeitem?f=' + ${form.formID} + '&amp;rcpid=' + ${rilMember.key.rilCPID}} + '&amp;ritype=' + ${coreRI.name}">remove</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+						
+						<div class="wrapperCol">
+							<form th:action="@{${datasetPath} + '/items/groups/create'}" name="newGroupForm" method="post">
+								<input type="hidden" name="formID" th:value="${form.formID}" />
+								<table>
+									<thead>
+										<tr>
+											<th colspan="2">Create a new group</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><label for="rilName">Name:</label></td>
+											<td><input type="text" name="rilName" id="rilName" /></td>
+										</tr>
+										<tr>
+											<td><label for="rilDesc">Description:</label></td>
+											<td>
+												<textarea rows="3" cols="15" name="rilDesc" id="rilDesc"></textarea>
+											</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td colspan="2">
+												<button type="submit" th:text="#{buttons.labels.create}">Create</button>
+											</td>
+										</tr>
+									</tfoot>
+								</table>
+							</form>
+						
+							<div th:unless="${noRILs}" class="subInfoBlock">
+								<h4>The selected group contains the following items from this dataset:</h4>
+								<ul id="rilMemberItems" class="plainList"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+	<script type="text/javascript">
+		$(readyEditDSItem);
+	</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<import resource="datasource-config.xml" />
+	<import resource="security-config.xml" />
+
+	<!-- Framework resources -->
+	<bean id="repInfoCategories" class="eu.scidipes.toolkits.pawebapp.util.FrameworkUtils"
+		factory-method="getSortedCategories" lazy-init="true" />
+
+	<bean id="sortedRILs" class="eu.scidipes.toolkits.pawebapp.util.FrameworkUtils"
+		factory-method="getRILsByType" lazy-init="true" />
+
+	<!-- TODO: externalise password -->
+	<bean id="textEncryptor" class="org.jasypt.util.text.BasicTextEncryptor">
+		<property name="password" value="randompass" />
+	</bean>
+
+</beans>

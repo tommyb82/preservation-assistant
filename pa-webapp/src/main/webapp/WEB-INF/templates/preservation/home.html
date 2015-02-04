@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: docHeader">
+</head>
+<body id="datasets">
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+
+	<div id="main">
+		<h2 th:text="#{datasets.preserve.title} + (${dataset} != null ? ': ' + ${dataset.displayName} : '')">Preserve data set: MERIS</h2>
+		<h3 class="error" th:if="${! #strings.isEmpty(errorKey)}" th:text="#{${errorKey}}">An error occurred</h3>
+		<h3 class="message" th:if="${! #strings.isEmpty(msgKey)}" th:text="#{${msgKey}}">Dataset Preserved</h3>
+
+		<h3 th:text="#{datasets.preserve.subtitle}">Use this page to confirm the details of the preservation</h3>
+		<p>Select a registry to which this data set will be preserved and add credentials as required</p>
+
+		<div class="wrapper">
+			<form th:action="@{/preservation/preserve}" method="post" name="regSelectForm" class="wrapperCol">
+				<table class="threeQuartsWidth">
+					<caption>Start preservation job</caption>
+					<tbody>
+						<tr>
+							<td th:text="#{datasets.title.shortsingular}">Data set</td>
+							<td>
+								<select name="datasetName" id="datasetName">
+									<option th:each="ds : ${datasets}" th:value="${ds.datasetName}" 
+										th:text="${ds.displayName}" th:selected="${dataset != null and (dataset == ds)}">MERIS</option>
+								</select>
+							</td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td><label for="registry">Select a registry</label></td>
+							<td><select name="registry" id="registry">
+									<option th:each="registry : ${enabledRegistries}" th:value="${registry.locationUID}" th:text="${registry.locationUID}">APA</option>
+							</select></td>
+							<td><span id="regAuthStatus"></span></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="3">
+								<button type="submit" th:text="#{buttons.labels.start}">Start</button>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</form>
+	
+			<table class="wrapperCol">
+				<caption th:text="#{datasets.preserve.jobs.monitor.title}">Monitor preservation jobs</caption>
+				<thead>
+					<tr class="subheadrow">
+						<th th:text="#{datasets.title.shortsingular}">Data set</th>
+						<th th:text="#{registry}">Registry</th>
+						<th>Completed</th>
+						<th>Total</th>
+						<th>Status</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="pJob : ${@preservationManager.preservationJobs}">
+						<td th:text="${pJob.datasetName}">MERIS</td>
+						<td th:text="${pJob.registryUID}">APA</td>
+						<td th:text="${pJob.completed}">10</td>
+						<td th:text="${#maps.size(pJob.preservationJobItemMap)}">20</td>
+						<td th:text="${pJob.completed == #maps.size(pJob.preservationJobItemMap) ? 'Complete' : 'In progress'}">Complete</td>
+						<td>
+							<button type="button" th:onclick="'viewJobDetails(\'' + ${pJob.datasetName} + '\',\'' + ${pJob.registryUID} + '\');'" th:text="#{buttons.labels.details}">Details</button>
+							<a href="/preservation/jobs/meris/delete" th:href="@{|/preservation/jobs/${pJob.datasetName}/delete|}" 
+								onclick="return confirm('Confirm preservation job deletion (cannot be undone):')" th:text="#{buttons.labels.delete}" class="button">Delete</a>
+							
+						</td>
+					</tr>
+					<tr th:if="${#sets.isEmpty(@preservationManager.preservationJobs)}">
+						<td colspan="6"><p>No preservation jobs started or ongoing from this PA</p></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div id="setRegCreds" class="hidden">
+			<form action="" th:action="@{'/registries/setregcreds'}" method="post" name="setRegCredsForm" id="setRegCredsForm">
+				<table>
+					<tbody>
+						<tr>
+							<td th:text="#{registry}">Registry</td>
+							<td><input type="text" name="regUID" readonly="readonly" /></td>
+						</tr>
+						<tr>
+							<td th:text="#{login.username}">Username</td>
+							<td><input type="text" name="regPrincipal" /></td>
+						</tr>
+						<tr>
+							<td th:text="#{login.password}">Password</td>
+							<td><input type="password" name="regCred" /></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="2">
+								<button onclick="javascript:$('#setRegCreds').dialog('close');" th:text="#{buttons.labels.cancel}">Cancel</button>
+								<button type="submit" th:text="#{buttons.labels.save}">Save</button>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</form>
+		</div>
+		
+		<div id="jobDetailsDialog" class="hidden">
+			<p>Monitor the progress of the preservation of dataset <strong id="jobDetailsJobName">MERIS</strong> to registry/repository <strong id="jobDetailsRegName">APA</strong>.</p>
+			<p>Please note that these details are only available until the next time the application is restarted.</p>
+			<table id="jobDetails">
+				<thead>
+					<tr class="subheadrow">
+						<th>Item name</th>
+						<th>Type</th>
+						<th>Status</th><!-- uploading, error, complete -->
+						<th>Preservation Details</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+	<script type="text/javascript">
+		$(readyPreserveDS);
+	</script>
+</body>
+</html>

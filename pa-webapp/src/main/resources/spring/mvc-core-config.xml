@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<import resource="thymeleaf-view-config.xml" />
+
+	<context:component-scan
+		base-package="eu.scidipes.toolkits.pawebapp.web,eu.scidipes.toolkits.pawebapp.preservation,eu.scidipes.toolkits.palibrary.impl" />
+
+	<mvc:annotation-driven conversion-service="conversionService"
+		enable-matrix-variables="true" />
+
+	<mvc:resources mapping="/webjars/**"
+		location="classpath:/META-INF/resources/webjars/" />
+
+	<mvc:view-controller path="/" view-name="welcome" />
+	<mvc:view-controller path="/layout" view-name="layout" />
+	<mvc:view-controller path="/login" view-name="login" />
+	<mvc:view-controller path="/about/" view-name="about" />
+	<mvc:view-controller path="/help/" view-name="help" />
+
+	<mvc:default-servlet-handler />
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<ref bean="localeChangeInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="en" />
+	</bean>
+
+	<bean id="localeChangeInterceptor"
+		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="lang" />
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource"
+		p:basename="messages/messages" />
+
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="defaultErrorView" value="error" />
+		<property name="warnLogCategory" value="warn" />
+		<property name="exceptionMappings">
+			<props>
+				<prop key="MaxUploadSizeExceededException">error-maxuploadsizeexceeded</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="maxUploadSize" class="java.lang.Long">
+		<!-- 10MB limit -->
+		<constructor-arg value="10485760" />
+	</bean>
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- Enforce file upload limit -->
+		<property name="maxUploadSize" ref="maxUploadSize" />
+	</bean>
+
+	<bean id="conversionService"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="formatters">
+			<set>
+				<bean class="eu.scidipes.toolkits.palibrary.impl.jpa.CategoryConverter" />
+				<bean class="eu.scidipes.toolkits.palibrary.impl.jpa.CPIDConverter" />
+				<bean class="eu.scidipes.toolkits.pawebapp.model.security.RoleConverter" />
+			</set>
+		</property>
+	</bean>
+
+</beans>

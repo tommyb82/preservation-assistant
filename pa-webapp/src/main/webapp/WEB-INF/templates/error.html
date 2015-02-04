@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: docHeader">
+</head>
+<body>
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+
+	<div id="main">
+		<h2 class="error" th:text="#{error.title}">An error occurred</h2>
+		<h3 th:text="#{error.subtitle}">Please contact your system administrator</h3>
+
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+</body>
+</html>

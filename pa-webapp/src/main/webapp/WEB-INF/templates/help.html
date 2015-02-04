@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: docHeader">
+</head>
+<body id="help">
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+
+	<div id="main">
+		<h2 th:text="#{titles.help}">Help</h2>
+		<h3>Help...</h3>
+
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+</body>
+</html>

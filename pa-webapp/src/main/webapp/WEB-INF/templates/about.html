@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: docHeader">
+</head>
+<body id="about">
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+
+	<div id="main">
+		<h2 th:text="#{titles.about}">About</h2>
+		<h3>Introduction to the Preservation Assistant</h3>
+		
+		<div class="twoThirdsWidth">
+			<p>The Preservation Assistant ('PA') is used independently within the SCIDIP-ES e-Infrastructure to support the process of creating and populating the contents of a registry-repository with preservation data.</p>
+	
+			<p>Used in conjunction with the RepInfo Registry-Repository Service component, it provides data preservation staff with a simple, intuitive means to preserve knowledge of dataset elements, and optionally preserve the elements themselves within a SCIDIP repository.</p>
+	
+			<h4>Documentation</h4>
+			<p>The latest version of the PA user manual can be downloaded here: [TBC]</p>
+			
+			<h4>Download</h4>
+			<p>You can download the latest version of the PA web application here (includes all dependencies): <br />
+				<a href="http://nexus.scidip-es.eu/content/repositories/releases/eu/scidipes/toolkits/pa-webapp/" title="PA release repository"
+					target="_blank">http://nexus.scidip-es.eu/content/repositories/releases/eu/scidipes/toolkits/pa-webapp/</a>
+			</p>
+		</div>
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+</body>
+</html>

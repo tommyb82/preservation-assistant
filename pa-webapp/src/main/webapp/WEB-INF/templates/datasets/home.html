@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: docHeader">
+</head>
+<body id="datasets">
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+
+	<div id="main">
+		<h2 th:text="#{datasets.title}">Data sets</h2>
+		<h3 class="error" th:if="${! #strings.isEmpty(errorKey)}" th:text="#{${errorKey}}">An error occurred</h3>
+		<h3 class="message" th:if="${! #strings.isEmpty(msgKey)}" th:text="#{${msgKey}}">Dataset Preserved</h3>
+		
+		<h3 th:text="#{datasets.title.select}">Please select a data set</h3>
+
+		<table>
+			<thead>
+				<tr>
+					<th th:text="#{datasets.title.shortsingular}">Data set</th>
+					<th th:text="#{datasets.list.table.info.title}">Information &amp; status</th>
+					<th th:text="#{datasets.list.table.actions.title}">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="dscwrapper : ${dataSets}">
+					<td><a href="/datasets/meris" th:href="@{'/datasets/' + ${dscwrapper.dataSet.datasetName}}" th:text="${dscwrapper.dataSet.displayName}">MERIS Data</a></td>
+					<td th:text="#{datasets.list.table.infostatus(${dscwrapper.completedFormsCount}, ${#lists.size(dscwrapper.dataSet.forms)})}">1 of 3 forms completed</td>
+					<td>
+						<a href="/datasets/meris" th:href="@{'/datasets/' + ${dscwrapper.dataSet.datasetName}}" th:text="#{buttons.labels.select}" class="button">Select</a>
+						<a href="/datasets/meris/delete" th:href="@{|/datasets/${dscwrapper.dataSet.datasetName}/delete|}" 
+							onclick="return confirm('Confirm dataset deletion (cannot be undone):')" th:text="#{buttons.labels.delete}" class="button">Delete</a>
+						<a href="/preservation/meris" th:href="@{'/preservation/' + ${dscwrapper.dataSet.datasetName}}" 
+							th:if="${dscwrapper.completedFormsCount > 0}" th:text="#{buttons.labels.preserve}" class="button">Preserve in repository</a>
+					</td>
+				</tr>
+				<tr th:if="${#lists.isEmpty(dataSets)}">
+					<td colspan="3"><p>Use the form below to create new data sets</p></td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<h3 th:text="#{datasets.new.title}">Create a new data set</h3>
+		<form th:action="@{'/datasets/new'}" method="post" th:unless="${#lists.isEmpty(availableBundles)}" class="halfWidth">
+			<table>
+				<tbody>
+					<tr>
+						<td><label for="datasetName" th:text="#{datasets.new.form.datasetname}">Data set name</label></td>
+						<td><input type="text" name="datasetName" size="30" /></td>
+					</tr>
+					<tr>
+						<td><label for="bundleName" th:text="#{datasets.new.form.templatebundle}">Template bundle</label></td>
+						<td>
+							<select name="bundleName">
+								<option th:each="bundle : ${availableBundles}" th:value="${bundle.bundleName}" 
+									th:text="|${bundle.bundleName} (${bundle.processorName})|">PDF</option>
+							</select>
+						</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2"><button type="submit" th:text="#{buttons.labels.create}">Create</button></td>
+					</tr>
+				</tfoot>
+			</table>
+		</form>
+		
+		<div th:if="${#lists.isEmpty(availableBundles)}">
+			<p th:unless="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="error">No template bundles found. Please contact your system administrator.</p>
+			
+			<p th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+				Add new template bundles in the <a href="admin/templates" th:href="@{/admin/templates/}" th:text="#{templates.title}">Template management</a> section.
+			</p>
+		</div>
+		
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+	<script type="text/javascript">
+		$(readyDatasetHome);
+	</script>
+</body>
+</html>

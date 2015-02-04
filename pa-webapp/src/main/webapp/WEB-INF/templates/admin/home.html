@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: docHeader">
+</head>
+<body id="admin">
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+
+	<div id="main">
+		<h2 th:text="#{admin.title}">Administration</h2>
+		<h3 th:text="#{admin.subtitle}">Select an admin function from the list below</h3>
+		
+		<ul class="plainList">
+			<li><p><a href="admin/templates" th:href="@{/admin/templates/}" th:text="#{templates.title}">Template management</a></p></li>
+			<li><p><a href="admin/users" th:href="@{/admin/users/}" th:text="#{users.management.title}">User management</a></p></li>
+		</ul>
+		
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+</body>
+</html>

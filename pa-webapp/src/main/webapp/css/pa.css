@@ -1,0 +1,302 @@
+@charset "UTF-8";
+
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	color: #14274F;
+	background: url(../images/textures/cream_dust/cream_dust.png) repeat 0 0;
+}
+
+h1 {
+	font-size: 1.75em;
+}
+
+h2 {
+	font-size: 1.5em;
+}
+
+h3 {
+	font-size: 1.25em;
+}
+
+h4 {
+	font-size: 1.10em;
+}
+
+form,p,main h2,#main h2,main h3,#main h3,h4,table,ul,.infoBlock,.subInfoBlock
+	{
+	margin: 5px;
+	border: 0;
+}
+
+main h2,#main h2 {
+	margin: 10px 5px 10px 5px;
+}
+
+a,#jobDetails a {
+	text-decoration: none;
+	color: #337AB7;
+}
+
+a:hover,#jobDetails a:hover {
+	text-decoration: underline;
+}
+
+pre {
+	display: inline-block;
+	background-color: #F4F4F4;
+}
+
+main,#main,footer,#footer,nav,#nav {
+	min-width: 1024px;
+	width: 66%;
+	margin-left: auto;
+	margin-right: auto;
+	clear: both;
+	padding: 5px;
+	font-size: 14px;
+}
+
+footer,#footer {
+	border-top: 1px solid #999999;
+}
+
+/* Main navigation: */
+nav,#nav {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#navlist {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#navlist li {
+	float: left;
+}
+
+#navlist a {
+	font-weight: bold;
+	margin-right: 10px;
+	padding: 2px 5px 2px 5px;
+	display: block;
+	width: auto;
+	background-color: #F4F4F4;
+	color: #14274F;
+}
+
+#navlist a:hover {
+	text-decoration: none;
+	color: #fff;
+	background-color: #ccc;
+}
+
+body#home a#homenav,body#datasets a#dsnav,body#about a#aboutnav,body#help a#helpnav,body#admin a#adminnav
+	{
+	color: #ffffff;
+	background-color: #14274F;
+}
+
+/* Forms and tables: */
+form table {
+	width: 100%;
+	margin: 0;
+}
+
+table th,table td,table caption {
+	padding: 5px;
+	background-color: #eee;
+	text-align: left;
+	vertical-align: top;
+}
+
+table caption {
+	background-color: #14274F;
+	color: #FFFFFF;
+	border: 1px solid #FFFFFF;
+	font-weight: bold;
+}
+
+table th {
+	background-color: #14274F;
+	color: #FFFFFF;
+}
+
+table tr.subheadrow th {
+	background-color: #0082C6;
+}
+
+tfoot td {
+	text-align: right;
+}
+
+tbody td input,table td textarea,table td select {
+	width: 85%;
+}
+
+tbody td input[type=checkbox] {
+	width: auto;
+}
+
+table#jobDetails th {
+	color: #14274F;
+}
+
+/* Data tables styles */
+table.dataTable tr:odd td {
+	background-color: red !important;
+}
+
+table.dataTable tr:even td {
+	background-color: green !important;
+}
+
+/* General layout and display classes: */
+.wrapper {
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+}
+
+.wrapperCol {
+	display: table-cell;
+	/* padding: 5px; */
+	vertical-align: top;
+}
+
+.hidden {
+	display: none;
+}
+
+.floatRight {
+	float: right;
+}
+
+.floatLeft {
+	float: left;
+}
+
+.clearBoth {
+	clear: both;
+}
+
+.autoWidth {
+	width: auto;
+}
+
+.quartWidth {
+	width: 25%;
+}
+
+.thirdWidth {
+	width: 33%;
+}
+
+.twoFifthsWidth {
+	width: 40%;
+}
+
+.halfWidth {
+	width: 50%;
+}
+
+.twoThirdsWidth {
+	width: 66%;
+}
+
+.threeQuartsWidth {
+	width: 75%;
+}
+
+.fullWidth {
+	width: 100%;
+}
+
+.error {
+	font-weight: bold;
+	color: #8C0E0E;
+}
+
+.fieldError {
+	border: 1px solid #8C0E0E;
+}
+
+.message {
+	font-weight: bold;
+	color: #6DB33F;
+}
+
+.small {
+	font-size: .9em;
+}
+
+.footerSmall {
+	font-size: .8em;
+	color: #999999;
+}
+
+button,a.button {
+	cursor: pointer;
+	display: inline-block;
+	background-color: #E9E9E9;
+	border: 1px solid #A4A4A4;
+	padding: 3px 5px 3px 5px !important;
+	border-radius: 3px;
+	font-size: inherit !important;
+	font-family: inherit !important;
+	text-decoration: none;
+	color: #14274F;
+}
+
+.infoBlock,.subInfoBlock {
+	border-radius: 3px;
+	padding: 5px;
+}
+
+.infoBlock {
+	background-color: #A9C4E0;
+	border: 1px solid #A4A4A4;
+	box-shadow: 0 0 2px 2px #ccc;
+}
+
+.subInfoBlock {
+	background-color: #eee;
+	border: 1px solid #A4A4A4;
+}
+
+.plainList {
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.plainList li ul {
+	list-style-type: square;
+}
+
+.whiteBackground {
+	background-color: #FFFFFF;
+}
+
+.inline {
+	display: inline;
+}
+
+/* SCIDIP styles */
+.scidip {
+	font-family: Audiowide, cursive;
+}
+
+/* Override jquery-ui styles where necessary */
+.ui-widget {
+	font-family: inherit !important;
+	font-size: 0.9em !important;
+}
+
+#jobDetails {
+	border: 1px solid #ccc;
+}
+
+#jobDetails tr.even td {
+	background-color: #ddd;
+}

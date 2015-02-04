@@ -1,0 +1,209 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>eu.scidipes.toolkits</groupId>
+		<artifactId>preservation-assistant-spring-boot</artifactId>
+		<version>1.1.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>pa-webapp-spring-boot</artifactId>
+	<packaging>war</packaging>
+	<name>${project.artifactId}</name>
+
+	<properties>
+		<log4j.level>TRACE</log4j.level>
+		<registry-adapter.version>3.1.1</registry-adapter.version>
+		<spring-data-jpa.version>1.5.2.RELEASE</spring-data-jpa.version>
+		<spring-security.version>3.2.3.RELEASE</spring-security.version>
+		<hsqldb.version>2.3.2</hsqldb.version>
+		<mysql-connector-java.version>5.1.9</mysql-connector-java.version>
+		<tomcat-jdbc.version>8.0.5</tomcat-jdbc.version>
+		<thymeleaf-spring4.version>2.1.2.RELEASE</thymeleaf-spring4.version>
+		<thymeleaf-extras-springsecurity3>2.1.1.RELEASE</thymeleaf-extras-springsecurity3>
+	</properties>
+
+	<scm>
+		<connection>scm:svn:http://svn.code.sf.net/p/digitalpreserve/code/SCIDIP-ES/software/toolkits/preservation-assistant/pa-webapp</connection>
+		<developerConnection>scm:svn:https://svn.code.sf.net/p/digitalpreserve/code/SCIDIP-ES/software/toolkits/pa-webapp</developerConnection>
+	</scm>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Force latest version for spring-security dependencies -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+
+			<!-- Force latest version for spring-data-jpa dependencies -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-orm</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aop</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-tx</artifactId>
+				<version>${springframework.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>eu.scidipes.toolkits</groupId>
+			<artifactId>pa-library</artifactId>
+			<version>1.1.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.scidipes.toolkits</groupId>
+			<artifactId>pa-library</artifactId>
+			<version>1.1.1-SNAPSHOT</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>eu.scidipes.common</groupId>
+			<artifactId>scidipes-framework</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>eu.scidipes.common</groupId>
+			<artifactId>generic-acs-registry-adapter</artifactId>
+			<version>${registry-adapter.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.scidipes.common</groupId>
+			<artifactId>generic-apa-registry-adapter</artifactId>
+			<version>${registry-adapter.version}</version>
+		</dependency>
+
+		<!-- Thymeleaf -->
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf-spring4</artifactId>
+			<version>${thymeleaf-spring4.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity3</artifactId>
+			<version>${thymeleaf-extras-springsecurity3}</version>
+		</dependency>
+
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<version>${spring-data-jpa.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+
+		<!-- Persistence -->
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jdbc</artifactId>
+			<version>${tomcat-jdbc.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>${hsqldb.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql-connector-java.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- WebJars -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery-ui</artifactId>
+			<version>1.10.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>datatables</artifactId>
+			<version>1.10.2-1</version>
+		</dependency>
+
+		<!-- Java Simplified Encryption library -->
+		<dependency>
+			<groupId>org.jasypt</groupId>
+			<artifactId>jasypt</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<version>2.10.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<version>1.1.4.RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>logback-classic</artifactId>
+					<groupId>ch.qos.logback</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+	</build>
+
+</project>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: docHeader">
+</head>
+<body>
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+
+	<div id="main">
+		<h2 th:text="#{users.profile.title}">User profile</h2>
+		<h3 class="message" th:if="${! #strings.isEmpty(msgKey)}" th:text="#{${msgKey}}">Password change successful</h3>
+		<!--/* <h3 th:text="#{page.subtitle}">Section 1</h3> */-->
+		
+		<p><a href="/user/changepassword" th:href="@{/user/changepassword}" th:text="#{users.changepassword.title}">Change Password</a></p>
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+</body>
+</html>

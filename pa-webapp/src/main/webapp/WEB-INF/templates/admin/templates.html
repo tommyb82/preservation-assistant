@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="layout :: docHeader">
+</head>
+<body id="admin">
+	<header th:include="layout :: #header"></header>
+	<nav th:include="layout :: #nav"></nav>
+
+	<div id="main">
+		<h2 th:text="#{templates.title}">Data set template (bundle) management</h2>
+		<h3 class="error" th:if="${! #strings.isEmpty(errorKey)}" th:text="#{${errorKey}}">An error occurred</h3>
+		<h3 class="message" th:unless="${#strings.isEmpty(msgKey)}" th:text="#{${msgKey}}">Item saved</h3>
+		<h3 th:text="#{templates.subtitle}">Use this page to manage data set templates used by the system</h3>
+
+		<p class="halfWidth">
+			The system searches for installed template processors and administrators can then use this page to assign one or more sources to each processor to 
+			create a <strong>dataset template</strong>, also known as a 'bundle'.
+		</p>
+		<form action="" method="post" enctype="multipart/form-data" class="threeQuartsWidth">
+			<table>
+				<thead>
+					<tr>
+						<th>Template processor</th>
+						<th>Bundle name</th>
+						<th>Source</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="bundle : ${bundles}">
+						<td>
+							<p th:text="${bundle.processorName}"></p>
+						</td>
+						<td>
+							<p th:text="${bundle.bundleName}"></p>
+						</td>
+						<td>
+							<p th:text="${bundle.templateSource}">ES.owl</p>
+						</td>
+						<td>
+							<a class="button" th:href="@{'/admin/templates/deletebundle?bundleName=' + ${bundle.bundleName}}">Delete</a>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4">
+							<p><strong>Add a new template bundle:</strong></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<select name="processorName">
+								<option th:each="processorEntry : ${processorMap}" th:value="${processorEntry.key}" th:text="${processorEntry.value.name}">ES PDSC Ontology Processor</option>
+							</select>
+						</td>
+						<td colspan="2">
+							<label for="source">Source: </label><input type="file" name="source" id="source" />
+						</td>
+						<td>
+							<button type="submit">Save</button>
+						</td>
+					</tr>
+					
+				</tbody>
+			</table>
+		</form>
+		
+	</div>
+
+	<footer th:include="layout :: #footer"></footer>
+</body>
+</html>

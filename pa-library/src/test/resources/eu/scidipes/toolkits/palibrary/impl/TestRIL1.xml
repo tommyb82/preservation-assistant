@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<repinfo xmlns="http://preservedigital.info/ril" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://preservedigital.info/ril http://registry2.scidip-es.eu/repository/SCIDIP/ril_1.1.xsd">
+
+	<!-- An echo of the CPID requested for which this RIL describes -->
+	<cpid>RIL-MERIS_L2_data</cpid>
+	<version>1</version>
+	<lastmodified>2014-02-24T12:10:56</lastmodified>
+	<displayname>MERIS L2 data</displayname>
+	<description>MERIS L2 data</description>
+	<structuralRIList>
+		<and>
+			<cpid category="Semantic/Document" type="RIL-PDF_1-5_in_English">MAN-MERIS_product_handbook</cpid>
+			<cpid category="Other/Software/Documentation" type="RIL-PDF_1-4_in_English">MAN-Issue_sheet</cpid>
+			<cpid category="Structure" type="RIL-English_text_in_ASCII">MAN-Missing_Structure_RepInfo_-_to_be_supplied_later</cpid>
+		</and>
+	</structuralRIList>
+	<semanticRIList>
+		<and>
+			<cpid category="Semantic/Document" type="RIL-PDF_1-3_in_English">MAN-MERIS_Vol1</cpid>
+			<cpid category="Semantic/Document" type="RIL-PDF-A_in_English">MAN-DOC_MERIS_N1_L2.pdf</cpid>
+			<cpid category="Semantic/Document" type="RIL-PDF_1-4_in_English">MAN-MERIS_L2_DPM</cpid>
+			<cpid category="Semantic/Document" type="RIL-PDF_1-3_in_English">MAN-Reference_Model_for_MERIS_Level_2_Processing</cpid>
+			<cpid category="Semantic/Document" type="RIL-PDF_1-4_in_English">MAN-Specification_of_the_Scientific_Contents_of_the_MERIS_Level-1b_and_2_Auxiliary_Data_Products</cpid>
+			<cpid category="Semantic/Document" type="RIL-PDF_1-5_in_English">MAN-Specification_of_the_Contents_of_the_MERIS_Radiative_Transfer_Tools_used_to_Generate_the_Level-2_Auxiliary_Data_Products</cpid>
+		</and>
+	</semanticRIList>
+	<otherRIList>
+		<or>
+			<cpid category="Other/Software" type="RIL-MAC_OS_executable">MAN-BEAM_MAC_OS_installation</cpid>
+			<cpid category="Other/Software" type="RIL-MS_Windows_executable">MAN-BEAM_MS_Windows_installation</cpid>
+		</or>
+	</otherRIList>
+</repinfo>
